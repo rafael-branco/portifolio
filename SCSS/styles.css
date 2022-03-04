@@ -112,6 +112,11 @@ body {
   text-align: center;
 }
 
+.about-me-container .about-me p span.developer-word {
+  color: #e60745;
+  font-weight: 700;
+}
+
 .skills-container {
   width: 80%;
   margin: 50px auto;
