@@ -23,7 +23,9 @@ body {
 }
 
 
-
+.contact-container + script + div > a{
+    display: none !important;
+}
 
 .top-container {
 
