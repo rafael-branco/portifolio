@@ -466,7 +466,6 @@ body {
   background-color: #e60745;
 }
 .contact-container .contact-box {
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   margin: auto;
