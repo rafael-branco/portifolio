@@ -131,7 +131,7 @@ body {
   color: #FFF;
   text-transform: uppercase;
   background-color: #e60745;
-  width: 125px;
+  width: 170px;
   margin: 5px;
   font-weight: bold;
   border: 1px solid #FFF;
@@ -151,7 +151,8 @@ body {
 }
 @media (max-width: 991px) {
   .skills-container ul.skills-box li.skill {
-    max-width: 400px;
+    width: 140px;
+    font-size: smaller;
   }
 }
 
