@@ -1,596 +1,911 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="SCSS/styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rafael do Rosário Branco — Senior QA Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     TOKENS
+     ============================================================ */
+  :root {
+    --bg:            #212121;
+    --surface:       #262626;
+    --surface-2:     #2a2a2a;
+    --surface-hi:    #303030;
+    --text:          #ffffff;
+    --text-soft:     #bdbdbd;
+    --text-faint:    #8a8a8a;
+    --accent:        #6ea2c7;  /* dark tech blue, used sparingly */
+    --accent-soft:   rgba(110, 162, 199, 0.14);
+    --line:          rgba(255, 255, 255, 0.08);
+    --line-strong:   rgba(255, 255, 255, 0.14);
 
-    <script src="https://kit.fontawesome.com/52607f5dd7.js" crossorigin="anonymous"></script>
-    <link rel="apple-touch-icon" sizes="180x180" href="IMG/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="IMG/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="IMG/favicon/favicon-16x16.png">
-    <link rel="manifest" href="IMG/favicon/site.webmanifest">
-    <title>Rafael Branco</title>
+    --maxw: 1080px;
+    --pad: clamp(20px, 5vw, 56px);
+    --radius: 14px;
+
+    --f-sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--f-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  ::selection { background: var(--accent-soft); color: #fff; }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding-inline: var(--pad);
+  }
+
+  /* ============================================================
+     SECTION LABELS
+     ============================================================ */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .section { padding-block: clamp(56px, 9vw, 104px); }
+  .section + .section { border-top: 1px solid var(--line); }
+
+  .section-head { margin-bottom: 40px; }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 14px;
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* circuit board layer */
+  .circuit {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .circuit svg { width: 100%; height: 100%; }
+  .circuit .trace { fill: none; stroke: #ffffff; stroke-width: 1; opacity: 0.12; }
+  .circuit .node  { fill: #ffffff; opacity: 0.14; }
+  .circuit .node-accent { fill: var(--accent); opacity: 0.55; }
+  .circuit .glow { fill: var(--accent); opacity: 0.10; }
+
+  /* fade the pattern away from the content side on wide screens */
+  .circuit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      rgba(33,33,33,0) 0%,
+      rgba(33,33,33,0) 42%,
+      rgba(33,33,33,0.85) 70%,
+      rgba(33,33,33,0.4) 100%);
+  }
+
+  .hero .wrap { position: relative; z-index: 1; width: 100%; }
+
+  .hero-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-soft);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .hero-name .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+
+  .hero h1 {
+    font-size: clamp(2.9rem, 8vw, 5.7rem);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    max-width: 13ch;
+  }
+
+  .hero-title {
+    margin-top: 18px;
+    color: var(--accent);
+    font-size: clamp(1.12rem, 2.4vw, 1.65rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-sub {
+    margin-top: 20px;
+    max-width: 46ch;
+    color: var(--text-soft);
+    font-size: clamp(0.95rem, 1.6vw, 1.12rem);
+    line-height: 1.75;
+  }
+  .hero-sub b { color: var(--text); font-weight: 600; }
+
+  .hero-meta {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    color: var(--text-faint);
+    font-size: 0.86rem;
+  }
+  .hero-meta span { display: inline-flex; align-items: center; gap: 8px; }
+  .hero-meta svg { width: 15px; height: 15px; stroke: var(--text-faint); fill: none; stroke-width: 1.6; }
+
+  .cta-row {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid var(--line-strong);
+    color: var(--text);
+    transition: border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .btn svg { width: 17px; height: 17px; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary {
+    background: var(--text);
+    color: #1a1a1a;
+    border-color: var(--text);
+  }
+  .btn-primary svg { fill: #1a1a1a; }
+  .btn-primary:hover { background: #ececec; }
+  .btn-ghost { background: var(--surface); }
+  .btn-ghost svg { fill: var(--text-soft); }
+  .btn-ghost:hover { border-color: var(--accent); background: var(--surface-hi); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    color: var(--text-faint);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-hint .bar { width: 1px; height: 34px; background: linear-gradient(var(--text-faint), transparent); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+
+  /* ============================================================
+     SUMMARY
+     ============================================================ */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px;
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.8;
+    position: relative;
+  }
+  .summary-card .qmark {
+    position: absolute;
+    top: 20px; right: 26px;
+    font-size: 2rem;
+    color: var(--accent);
+    opacity: 0.25;
+    font-weight: 800;
+  }
+  .summary-card b, .summary-card strong { color: var(--text); font-weight: 600; }
+
+  .stats {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+  }
+  .stat .num {
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .stat .num span { color: var(--accent); }
+  .stat .label { color: var(--text-faint); font-size: 0.82rem; margin-top: 6px; line-height: 1.4; }
+
+  /* ============================================================
+     SKILLS
+     ============================================================ */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 24px 28px;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .skill-card:hover { border-color: var(--line-strong); transform: translateY(-3px); }
+  .skill-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 18px;
+  }
+  .skill-card h3 .ic {
+    width: 30px; height: 30px;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    border: 1px solid rgba(110,162,199,0.25);
+    flex-shrink: 0;
+  }
+  .skill-card h3 .ic svg { width: 15px; height: 15px; stroke: var(--accent); fill: none; stroke-width: 1.7; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    padding: 6px 12px;
+    border-radius: 7px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .skill-card:hover .badge { border-color: rgba(255,255,255,0.1); }
+
+  /* ============================================================
+     EXPERIENCE
+     ============================================================ */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--line-strong);
+  }
+  .job {
+    position: relative;
+    padding-left: 40px;
+    padding-bottom: 40px;
+  }
+  .job:last-child { padding-bottom: 0; }
+  .job::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6px;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+  .job.minor::before { border-color: var(--text-faint); width: 12px; height: 12px; left: 2px; top: 8px; }
+
+  .job-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    transition: border-color .2s ease;
+  }
+  .job-card:hover { border-color: var(--line-strong); }
+
+  .job-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 18px;
+    margin-bottom: 4px;
+  }
+  .job-role { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+  .job-role .co { color: var(--accent); }
+  .job-date {
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .job-place { font-size: 0.86rem; color: var(--text-faint); margin-bottom: 16px; }
+
+  .job ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .job ul li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--text-soft);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+  .job ul li::before {
+    content: "";
+    position: absolute;
+    left: 2px; top: 10px;
+    width: 5px; height: 5px;
+    border-radius: 1px;
+    background: var(--accent);
+    opacity: 0.7;
+    transform: rotate(45deg);
+  }
+  .tech-row {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .tech-row .tag {
+    font-size: 0.74rem;
+    color: var(--text-faint);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+
+  /* compact minor roles laid side by side */
+  .minor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .minor .job-card { padding: 22px 24px; }
+  .minor .job-role { font-size: 1.02rem; }
+
+  /* ============================================================
+     EDUCATION / DETAILS
+     ============================================================ */
+  .edu-grid,
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .edu-card,
+  .detail-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 24px;
+  }
+  .edu-card .deg { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+  .edu-card .school { color: var(--text-soft); font-size: 0.9rem; margin-top: 8px; }
+  .edu-card .yr { color: var(--accent); font-size: 0.8rem; font-weight: 600; margin-top: 14px; letter-spacing: 0.04em; }
+  .detail-card h3 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .detail-card p { color: var(--text-soft); font-size: 0.92rem; line-height: 1.65; }
+  .detail-card .line-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--text-soft);
+    font-size: 0.92rem;
+  }
+  .detail-card .line-list span strong { color: var(--text); font-weight: 600; }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 48px;
+  }
+  .foot-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .foot-inner .name { font-weight: 700; font-size: 1.05rem; }
+  .foot-inner .sub { color: var(--text-faint); font-size: 0.84rem; margin-top: 4px; }
+  .foot-links { display: flex; gap: 12px; }
+  .foot-links a {
+    width: 42px; height: 42px;
+    display: grid; place-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    transition: border-color .2s, background .2s;
+  }
+  .foot-links a:hover { border-color: var(--accent); background: var(--surface); }
+  .foot-links svg { width: 18px; height: 18px; fill: var(--text-soft); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 880px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .skills-grid  { grid-template-columns: 1fr 1fr; }
+    .edu-grid     { grid-template-columns: 1fr; }
+    .detail-grid  { grid-template-columns: 1fr; }
+    .stats        { grid-template-columns: 1fr 1fr; }
+    .minor-grid   { grid-template-columns: 1fr; }
+    .circuit::after {
+      background: linear-gradient(180deg, rgba(33,33,33,0) 30%, rgba(33,33,33,0.7) 100%);
+    }
+  }
+  @media (max-width: 560px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .btn { flex: 1 1 auto; justify-content: center; }
+    .job-top { flex-direction: column; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; scroll-behavior: auto !important; }
+  }
+</style>
 </head>
-
 <body>
 
-    <div class="top-container">
-        <h1 class="my-name">
-            Rafael<br> Branco
-
-        </h1>
-
-
-        <div class="my-photo">
-            <img src="IMG/professional_photo.jpg">
-        </div>
+  <!-- ============================ HERO ============================ -->
+  <header class="hero" id="top">
+    <div class="circuit" aria-hidden="true">
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMinYMid slice">
+        <!-- left-side traces -->
+        <path class="trace" d="M0,150 H180 V260 H300" />
+        <path class="trace" d="M0,330 H120 V420 H260 V520" />
+        <path class="trace" d="M0,540 H90 V640 H210" />
+        <path class="trace" d="M0,720 H150 V620 H230" />
+        <path class="trace" d="M60,0 V120 H180" />
+        <path class="trace" d="M260,0 V90 H360 V200" />
+        <path class="trace" d="M40,900 V780 H190 V700" />
+        <path class="trace" d="M120,260 V330" />
+        <path class="trace" d="M300,260 V360 H400" />
+        <!-- corner top-right -->
+        <path class="trace" d="M1440,120 H1320 V40" />
+        <path class="trace" d="M1440,230 H1260 V150 H1180" />
+        <path class="trace" d="M1380,0 V90 H1300" />
+        <!-- corner bottom-right -->
+        <path class="trace" d="M1440,760 H1320 V860" />
+        <path class="trace" d="M1440,650 H1260 V740 H1170" />
+        <!-- nodes -->
+        <circle class="node" cx="300" cy="260" r="5" />
+        <circle class="node" cx="260" cy="520" r="5" />
+        <circle class="node" cx="210" cy="640" r="5" />
+        <circle class="node-accent" cx="120" cy="420" r="5" />
+        <circle class="node" cx="360" cy="200" r="5" />
+        <circle class="node" cx="400" cy="360" r="5" />
+        <circle class="node-accent" cx="190" cy="700" r="5" />
+        <circle class="node" cx="180" cy="120" r="4" />
+        <circle class="node" cx="1320" cy="40"  r="5" />
+        <circle class="node-accent" cx="1260" cy="150" r="5" />
+        <circle class="node" cx="1180" cy="150" r="4" />
+        <circle class="node" cx="1320" cy="860" r="5" />
+        <circle class="node-accent" cx="1260" cy="740" r="5" />
+        <circle class="node" cx="1170" cy="740" r="4" />
+        <circle class="glow" cx="120" cy="420" r="22" />
+        <circle class="glow" cx="1260" cy="150" r="22" />
+      </svg>
     </div>
 
-    <div class="about-me-container">
-        <h2>About me</h2>
+    <div class="wrap">
+      <div class="hero-name">
+        <span class="dot"></span>
+        Quality Engineering Portfolio
+      </div>
 
-        <div class="about-me">
-            <p>
+      <h1>Rafael Branco</h1>
 
-                Hello! I'm <span class="developer-word">Rafael Branco</span>, a dedicated <strong>QA Engineer</strong>
-                with a strong focus on delivering high-quality
-                software solutions through comprehensive testing and automation. With expertise in tools like Selenium,
-                Playwright, and WebDriverIO, and a solid foundation in Python, JavaScript, and various testing
-                methodologies, I excel in ensuring seamless software performance. While my primary passion lies in QA, I
-                also bring software engineering experience, allowing me to bridge the gap between development and
-                testing. I thrive in Agile environments, committed to enhancing software quality and user satisfaction
-                through meticulous test planning and execution.
-            </p>
+      <div class="hero-title">Senior QA Engineer</div>
 
-        </div>
+      <p class="hero-sub">
+        Test Automation · <b>E2E &amp; API Testing</b> · Playwright · PyTest · CI/CD ·
+        <b>AI-Driven QA Engineering</b>. Building reliable, scalable test
+        suites and leading quality strategy across multi-product platforms.
+      </p>
 
+      <div class="hero-meta">
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-5.6-7-11a7 7 0 1 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          Curitiba, Paraná, Brazil
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <a href="mailto:rafael.rbranco@hotmail.com">rafael.rbranco@hotmail.com</a>
+        </span>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#experience">
+          View Experience
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/rafael-branco" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4V24h-4zM8 8h3.8v2.2h.05c.53-1 1.83-2.2 3.77-2.2C19.6 8 21 10.2 21 14v10h-4v-8.9c0-2.12-.76-3.57-2.65-3.57-1.45 0-2.3.98-2.68 1.92-.14.34-.17.8-.17 1.27V24H8z"/></svg>
+          LinkedIn
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/rafael-branco" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.31-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.18.77.84 1.23 1.91 1.23 3.23 0 4.63-2.81 5.65-5.49 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
+          GitHub
+        </a>
+      </div>
     </div>
 
-    <div class="skills-container">
-        <h2>Skills</h2>
-        <ul class="skills-box">
-            <li class="skill">QA Automation</li>
-            <li class="skill">Manual Testing</li>
-            <li class="skill">Test Planning</li>
-            <li class="skill">Selenium</li>
-            <li class="skill">PyTest</li>
-            <li class="skill">Playwright</li>
-            <li class="skill">Cypress</li>
-            <li class="skill">API Testing</li>
-            <li class="skill">Python</li>
-            <li class="skill">Java</li>
-            <li class="skill">C/C++</li>
-            <li class="skill">C#</li>
-            <li class="skill">JavaScript</li>
-            <li class="skill">TypeScript</li>
-            <li class="skill">HTML/CSS</li>
-            <li class="skill">Git</li>
-            <li class="skill">JIRA</li>
-            <li class="skill">DevOps</li>
-            <li class="skill">Docker</li>
-            <li class="skill">Kubernetes</li>
-
-            <li class="skill">Cloud (GCP, AWS)</li>
-            <li class="skill">MySQL</li>
-            <li class="skill">SQL</li>
-            <li class="skill">Linux</li>
-            <li class="skill">CI/CD</li>
-            <li class="skill">Agile</li>
-        </ul>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <span class="bar"></span>
     </div>
+  </header>
 
+  <!-- ============================ SUMMARY ============================ -->
+  <section class="section" id="summary">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Summary</span>
+        <h2>A hands-on engineering approach to quality</h2>
+      </div>
 
-
-
-
-    <div class="education-container">
-
-        <h2>
-            Education
-        </h2>
-
-        <div class="education-cards-box">
-
-            <div class="education-card">
-                <h3>Postgraduate Degree in Information Security</h3>
-                <h4>UNICURITIBA</h4>
-                <small>09/2024 - 09/2025</small>
-            </div>
-
-            <div class="education-card">
-                <h3>Postgraduate Degree in Software Testing</h3>
-                <h4>Cruzeiro do Sul Virtual</h4>
-                <small>08/2023 - 12/2024</small>
-            </div>
-
-            <div class="education-card">
-                <h3>Bachelor of Engineering - BE in Computer Engineering</h3>
-                <h4>Universidade Positivo</h4>
-                <small>01/2016 - 12/2023</small>
-            </div>
-
-            <div class="education-card">
-                <h3>Associate's Degree in System Analysis & Development</h3>
-                <h4>UNICURITIBA</h4>
-                <small>06/2021 - 07/2022</small>
-            </div>
-
-
-
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="qmark">/</span>
+          QA Engineer with <b>6+ years</b> of professional experience across software
+          development and quality engineering, including <b>4+ years</b> focused on test
+          automation, API testing, and CI/CD integration. A background in software
+          development enables a hands-on engineering approach — writing more effective
+          tests and collaborating directly with development teams. Actively integrates
+          AI coding tools (Claude Code, Cursor, Codex, GitHub Copilot) into daily QA
+          workflows to accelerate test design and scale automation output.
         </div>
-
+        <div class="summary-card">
+          <span class="qmark">/</span>
+          Over the past two years, led QA efforts at an <b>American insurtech startup</b>,
+          coordinating a team of 4 QA engineers across 3 simultaneous products. Work
+          spans from hands-on automation with Playwright and PyTest to defining testing
+          strategy, mentoring team members, and communicating quality status to
+          technical leadership. <b>Fluent in English</b>, working daily in remote
+          cross-functional environments.
+        </div>
+      </div>
 
     </div>
+  </section>
 
-    <div class="languages-container">
+  <!-- ============================ SKILLS ============================ -->
+  <section class="section" id="skills">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Skills</span>
+        <h2>Capabilities &amp; toolchain</h2>
+      </div>
 
-        <h2>
-            Languages
-        </h2>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3><span class="ic"><svg viewBox="0 0 24 24"><path d="m9 11 3 3 6-6"/><path d="M21 12a9 9 0 1 1-6.2-8.5"/></svg></span>Automation &amp; Testing</h3>
+          <div class="badges">
+            <span class="badge">Playwright</span><span class="badge">PyTest</span>
+            <span class="badge">Cypress</span><span class="badge">WebDriverIO</span>
+            <span class="badge">Selenium</span><span class="badge">E2E</span>
+            <span class="badge">API</span><span class="badge">Load</span>
+            <span class="badge">Regression</span><span class="badge">Smoke</span>
+            <span class="badge">Manual Testing</span><span class="badge">Test Planning</span>
+            <span class="badge">Test Case Creation</span><span class="badge">Exploratory Testing</span>
+            <span class="badge">AI-Assisted Testing</span><span class="badge">Spec-Driven Dev</span>
+            <span class="badge">Prompt Engineering for QA</span>
+          </div>
+        </div>
 
-        <ul class="languages-box">,
-            <li class="language">English (Fluent)</li>
-            <li class="language">Brazilian Portuguese (Native)</li>
-            <li class="language">French (Basic)</li>
-            <li class="language">Spanish (Basic)</li>
-        </ul>
+        <div class="skill-card">
+          <h3><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></span>CI/CD &amp; Infrastructure</h3>
+          <div class="badges">
+            <span class="badge">Bitbucket Pipelines</span><span class="badge">Jenkins</span>
+            <span class="badge">Docker</span><span class="badge">AWS</span>
+            <span class="badge">GCP</span><span class="badge">Terraform</span><span class="badge">Linux</span>
+            <span class="badge">Git</span>
+          </div>
+        </div>
 
+        <div class="skill-card">
+          <h3><span class="ic"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg></span>Programming Languages</h3>
+          <div class="badges">
+            <span class="badge">TypeScript</span><span class="badge">Python</span>
+            <span class="badge">JavaScript</span><span class="badge">Shell</span>
+            <span class="badge">Node.js</span><span class="badge">Java</span>
+            <span class="badge">C/C++</span><span class="badge">C#</span>
+            <span class="badge">PHP</span><span class="badge">SQL</span>
+            <span class="badge">HTML/CSS</span><span class="badge">SCSS</span>
+            <span class="badge">Flask</span><span class="badge">MySQL</span>
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <h3><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg></span>Test Management</h3>
+          <div class="badges">
+            <span class="badge">TestRail</span><span class="badge">Testmo</span>
+            <span class="badge">Testiny</span><span class="badge">JIRA</span>
+            <span class="badge">Atlassian</span>
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <h3><span class="ic"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6 2 2 6-6a4 4 0 0 0 5.4-5.4l-2.3 2.3-2-2z"/></svg></span>Tools &amp; Practices</h3>
+          <div class="badges">
+            <span class="badge">Postman</span><span class="badge">Agile</span>
+            <span class="badge">Eclipse</span><span class="badge">DataStudio</span>
+            <span class="badge">Google Tag Manager</span><span class="badge">Excel/VBA</span>
+            <span class="badge">SharePoint</span><span class="badge">WordPress</span>
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <h3><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M5 12H2M22 12h-3"/><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 11h4M10 14h4"/></svg></span>AI-Assisted Development</h3>
+          <div class="badges">
+            <span class="badge">Claude Code</span><span class="badge">Cursor</span>
+            <span class="badge">Codex (OpenAI)</span><span class="badge">GitHub Copilot</span>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="work-history-container">
-        <h2>
-            Work History
-        </h2>
+  <!-- ============================ EXPERIENCE ============================ -->
+  <section class="section" id="experience">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Experience</span>
+        <h2>Where I've made an impact</h2>
+      </div>
 
-        <div class="work-box">
-            <h3>Revelar Technologies</h3>
-            <h4>QA Engineer</h4>
-            <small>Feb 2024 - Present</small>
-            <p>
-                Developed and executed comprehensive test plans and cases to ensure software quality and functionality.
-            </p>
-            <p>
-                Identified, documented, and tracked software defects using tools like JIRA, collaborating with
-                developers for timely resolution.
-            </p>
-            <p>
-                Designed and maintained automated test scripts with Selenium and Playwright, enhancing test efficiency
-                and coverage.
-            </p>
-            <p>
-                Conducted unit testing using PyTest, ensuring code reliability and robustness.
-            </p>
-            <p>
-                Performed API testing using Postman and PyTest, validating endpoints and ensuring correct data flow.
-            </p>
-            <p>
-                Collaborated with cross-functional teams, including international members, to ensure comprehensive test
-                coverage, actively participating in Agile ceremonies.
-            </p>
-            <p>
-                Created detailed test documentation and provided regular status updates, contributing to transparent and
-                effective communication within the team.
-            </p>
-            <p>
-                Engaged in daily communication with native English speakers, refining cross-cultural collaboration
-                skills and enhancing remote team integration.
-            </p>
-            <p>
-                <strong>Skills:</strong> Selenium, JIRA, Playwright, Python, Agile, API testing, PyTest, Unit testing,
-                Cross-cultural communication.
-            </p>
+      <div class="timeline">
+        <div class="job">
+          <div class="job-card">
+            <div class="job-top">
+              <div class="job-role"><span class="co">Tricura Insurance Group</span> — QA Engineering Tech Lead</div>
+              <div class="job-date">Jan 2024 – Present</div>
+            </div>
+            <div class="job-place">United States · Remote from Brazil</div>
+            <ul>
+              <li>Led QA coverage across 3 simultaneous products — a healthcare platform (Gemini), an underwriting system (Orion), and a claims management platform (Centaur) — in a fast-growing American insurtech startup.</li>
+              <li>Coordinated a team of 4 QA engineers (5 including self), responsible for onboarding, mentoring, and day-to-day alignment across all products.</li>
+              <li>Defined QA strategy and test automation roadmap; participated in technical leadership discussions with CEO, CTO, and product directors.</li>
+              <li>Managed release risk on a weekly cadence and produced executive QA documentation for stakeholder communication.</li>
+              <li>Worked directly with PMs, designers, developers, and CS teams to triage issues, investigate customer-facing bugs, and communicate quality status.</li>
+              <li>Built automated E2E test suites from scratch using Playwright (TypeScript and Python), covering critical flows, edge cases, and multi-role authentication scenarios — including full project structure, fixtures, Page Objects, API clients, and CI pipeline setup.</li>
+              <li>Designed API, unit, and integration test coverage with PyTest across 10+ domain modules — authentication, RBAC, error handling, response validation, claims, policies, facilities, and reporting.</li>
+              <li>Defined a practical test pyramid strategy across unit, API, and E2E layers; executed smoke and regression testing in production release cycles.</li>
+              <li>Improved frontend testability by instrumenting React/TypeScript applications with data-autotest attributes in collaboration with frontend developers.</li>
+              <li>Configured and maintained CI/CD pipelines in Bitbucket Pipelines and Jenkins with scheduled runs, AWS Secrets Manager integration, Slack-based test reporting, and flaky-test troubleshooting.</li>
+              <li>Migrated data-availability pipelines from Jenkins to Bitbucket Pipelines; managed Dockerized test execution environments and Terraform repository configuration.</li>
+              <li>Applied AI-assisted development practices (Claude Code, Cursor, Codex) daily for test script generation, scenario analysis, and pipeline design — reducing implementation time while maintaining engineering standards.</li>
+              <li>Adopted a spec-driven testing approach using AI coding agents, translating OpenAPI specifications and test scenario catalogs into executable Playwright and PyTest suites.</li>
+            </ul>
+            <div class="tech-row">
+              <span class="tag">Playwright</span><span class="tag">PyTest</span><span class="tag">TypeScript</span>
+              <span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">React</span>
+              <span class="tag">Bitbucket Pipelines</span><span class="tag">Jenkins</span><span class="tag">Docker</span>
+              <span class="tag">AWS</span><span class="tag">Linux</span><span class="tag">Terraform</span><span class="tag">Postman</span>
+              <span class="tag">JIRA</span><span class="tag">Claude Code</span><span class="tag">Cursor</span><span class="tag">Codex</span>
+            </div>
+          </div>
         </div>
 
-        <div class="work-box">
-            <h3>Atos</h3>
-            <h4>Application Developer</h4>
-            <small>Jan 2024 - May 2024</small>
-            <small>Remote</small>
-            <p>
-                Developed applications using Python, JavaScript, TypeScript, and Node.js, enhancing system
-                functionalities and integrating new features.
-            </p>
-            <p>
-                Managed tasks and project progress using JIRA/Atlassian, ensuring efficient workflow and communication
-                within the development team.
-            </p>
-            <p>
-                Implemented automated tests to improve code quality and reduce manual testing efforts, leveraging best
-                practices in test automation.
-            </p>
-            <p>
-                Utilized Kubernetes and Docker for container orchestration, and deployed applications on Google Cloud
-                Platform (GCP) to ensure scalability and reliability.
-            </p>
-            <p>
-                Collaborated with cross-functional teams, including daily interactions with native English-speaking
-                stakeholders, enhancing international communication and coordination.
-            </p>
-            <p>
-                Delivered high-quality software solutions in a dynamic, remote environment, demonstrating adaptability
-                and commitment to team goals across diverse cultural settings.
-            </p>
+        <div class="job">
+          <div class="job-card">
+            <div class="job-top">
+              <div class="job-role"><span class="co">Atos</span> — Load &amp; Automation Tester</div>
+              <div class="job-date">Jun 2022 – Dec 2023</div>
+            </div>
+            <div class="job-place">Curitiba, Brazil</div>
+            <ul>
+              <li>Planned and executed load and performance tests for high-traffic systems — defining test scenarios including concurrent users, transaction types, and load variations; analyzed results to assess system behavior under stress.</li>
+              <li>Developed automated E2E tests using WebDriverIO; performed API validation using RESTful methods and Postman; contributed to manual and performance testing to ensure functional stability.</li>
+              <li>Supported CI/CD processes with Jenkins; managed test execution environments using Kubernetes and Docker.</li>
+              <li>Scripted automation tasks in Python, JavaScript, and Shell on Linux environments; used Git for version control and JIRA for defect tracking.</li>
+              <li>Validated SIP, WebRTC, and CTI-based telephony solutions within Unified Communications systems — covering features such as conferencing, video calls, and voicemail within IP telephony platforms.</li>
+            </ul>
+            <div class="tech-row">
+              <span class="tag">WebDriverIO</span><span class="tag">Python</span><span class="tag">JavaScript</span>
+              <span class="tag">Shell</span><span class="tag">Jenkins</span><span class="tag">Docker</span>
+              <span class="tag">Kubernetes</span><span class="tag">Postman</span><span class="tag">JIRA</span><span class="tag">Linux</span>
+            </div>
+          </div>
         </div>
 
-
-        <div class="work-box">
-            <h3>Atos</h3>
-            <h4>Internship - Tester</h4>
-            <small>06/2022 - Present</small>
-            <p>Develop test automation tools or scripts using programming languages (Java, Groovy, C++, Python),
-                using different automation and development technologies
-                (e.g. Git, Jenkins, Selenium, Sikuli, TestNG, Spring, Eclipse, "Husim Tools" among others).
-            </p>
-
-            <p>
-                Develop and execute automation or automated test routines, analyze results, identify non-conformities,
-                collect relevant problem information, and indicate the best solution for corrective action.
-            </p>
-
-            <p>Assist in the development and validation of SIP, WebRTC, and CTI software application solutions,
-                aimed at controlling conference bridges, video calls, voice-mails, among other facilities,
-                in connection with Unified Communications servers and IP PBX
-            </p>
-
-            <p>Assist in the configuration and support of the data communication network infrastructure.</p>
+        <div class="job minor">
+          <div class="minor-grid">
+            <div class="job-card">
+              <div class="job-top">
+                <div class="job-role"><span class="co">Mentores Digital</span> — Web Developer</div>
+              </div>
+              <div class="job-place">Apr 2021 – Feb 2022 · Curitiba, Brazil</div>
+              <ul>
+                <li>Developed e-commerce stores using JavaScript, HTML/CSS, SCSS, WordPress, and Loja Integrada.</li>
+                <li>Managed AWS cloud infrastructure, SharePoint sites, DataStudio dashboards, and Google Tag Manager implementation.</li>
+                <li>Provided client support, addressing needs and maintaining strong relationships throughout project development.</li>
+                <li>Automated HR/Finance spreadsheets using JavaScript; actively involved in hiring and onboarding new developers.</li>
+              </ul>
+              <div class="tech-row">
+                <span class="tag">JavaScript</span><span class="tag">HTML/CSS</span><span class="tag">SCSS</span>
+                <span class="tag">WordPress</span><span class="tag">AWS</span><span class="tag">SharePoint</span>
+                <span class="tag">DataStudio</span><span class="tag">Google Tag Manager</span>
+              </div>
+            </div>
+            <div class="job-card">
+              <div class="job-top">
+                <div class="job-role"><span class="co">Freelance</span> — Software Developer</div>
+              </div>
+              <div class="job-place">Jan 2021 – Jan 2024</div>
+              <ul>
+                <li>Delivered 80+ projects on the VintePila platform across web development, automation, and data — serving clients from various industries.</li>
+                <li>Built web solutions using JavaScript, PHP, Python, C, C#, MySQL, Flask, and WordPress; developed e-commerce stores on Shopify, Builderall, and Loja Integrada, including landing pages and presell pages optimized for conversion.</li>
+                <li>Developed automation scripts and bots in Python (CAPTCHA solving via 2Captcha API, Mercado Livre product image importer); built Chrome extensions (including ERP Tiny integration); scripted VBA macros for Excel automation and data consolidation.</li>
+                <li>Created data dashboards and automated spreadsheets in Excel for clients in construction and finance sectors; built systems integrating Python and Excel for process automation.</li>
+                <li>Managed hosting environments (cPanel, Plesk, Vultr, Hostgator); handled domain corrections, site migrations, and server-side configurations.</li>
+                <li>Provided private tutoring and programming mentorship to students across Python, JavaScript, C, Java, and data structures — guiding them through exercises, projects, and concepts with hands-on support.</li>
+              </ul>
+              <div class="tech-row">
+                <span class="tag">Python</span><span class="tag">JavaScript</span><span class="tag">PHP</span>
+                <span class="tag">C</span><span class="tag">C#</span><span class="tag">MySQL</span>
+                <span class="tag">Flask</span><span class="tag">WordPress</span><span class="tag">Playwright</span>
+                <span class="tag">Selenium</span><span class="tag">VBA</span><span class="tag">Shopify</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="work-box">
-            <h3>Mentores Digital</h3>
-            <h4>Web Developer</h4>
-            <small>04/2021 - 02/2022</small>
-            <p>Worked with JavaScript, HTML, CSS, SCSS, e-commerce development for "Loja Integrada" and WordPress
-                websites.
-
-            </p>
-
-            <p>
-                Furthermore, I worked with DataStudio Dashboards, Google Tag Manager, Excel/Google Sheets automation
-                with VBA.
-            </p>
-
-            <p>In some moments, I helped with the new developers hiring process, helping the Human Resources to choose
-                the best developer profile for the company.</p>
-
-            <p>I’ve helped a lot on new colleages integration on
-                the team, and I took on a leadership responsibility
-                on the team.</p>
-
-            <p>Also, I received a <a href="#my-awards">Honesty Award</a>, as one of the four employees with the best
-                performance
-                in the year.</p>
+        <div class="job minor">
+          <div class="job-card">
+            <div class="job-top">
+              <div class="job-role"><span class="co">Siemens R&amp;D</span> — QA Tester, Intern</div>
+              <div class="job-date">Mar 2018 – Jul 2018</div>
+            </div>
+            <div class="job-place">Curitiba, Brazil</div>
+            <ul>
+              <li>Conducted smoke tests, regression tests, and build generation for the Spectrum Power portfolio (WebSDK graphical component).</li>
+              <li>Provided post-sales SLA support — maintaining Siemens solutions infrastructure (software and hardware), handling service requests, and managing IT network infrastructure updates including equipment patches, OS updates, and security systems.</li>
+              <li>Compiled KPI reports for internal and external stakeholders; maintained direct communication with clients on service status.</li>
+            </ul>
+            <div class="tech-row">
+              <span class="tag">Smoke Testing</span><span class="tag">Regression Testing</span>
+              <span class="tag">Build Generation</span><span class="tag">SLA Support</span>
+              <span class="tag">KPI Reporting</span><span class="tag">WebSDK</span>
+            </div>
+          </div>
         </div>
-
-        <div class="work-box">
-            <h3>Siemens (R&D)</h3>
-            <h4>Internship</h4>
-            <small>03/2018 - 07/2018</small>
-            <p>
-                Tasks related to software testing and after-sales (IT Infrastructure).
-            </p>
-            <p>
-                At software testing, I worked mainly with Smoke Tests, regression testing and unitary tests.
-            </p>
-            <p>
-                At after-sales (IT Infrastructure), I’ve worked with Linux (Ubuntu/Debian) and Windows Server maintance.
-            </p>
-            <p>
-                I have a recommendation letter from Siemens (R&D). I can send you through e-mail if you want.
-
-            </p>
-        </div>
-
-        <div class="work-box">
-            <h3>Freelancer</h3>
-
-            <small>2021 - Present</small>
-            <p>
-                I've been freelancing in my free time since 2021. And I work with Python and Web Development projects.
-                Also, I give programming lessons for other students helping with their queries.
-            </p>
-
-            <p>
-                Be free to <a href="#contact-me">contact me</a> for freelance projects! I'll be happy to help you!
-            </p>
-
-
-        </div>
-
-
+      </div>
     </div>
+  </section>
 
-    <div class="awards-container" id="my-awards">
-        <h2>Awards</h2>
-        <div class="awards-box">
-            <div class="award">
-                <div class="award-description">
-                    <h3>
-                        Honesty Award
-                    </h3>
-                    <h4>
-                        At Mentores Digital
-                    </h4>
-                    <small>2021</small>
-                    <p>
-                        Honesty Award, as one of the four employees with the best performance in the year.
-                    </p>
+  <!-- ============================ EDUCATION ============================ -->
+  <section class="section" id="education">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Education</span>
+        <h2>Academic background</h2>
+      </div>
 
-                    <a target="_blank"
-                        href="https://www.linkedin.com/feed/update/urn:li:activity:6879755209808084992/">Link to the
-                        LinkedIn Post</a>
-                </div>
-                <img class="award-photo" src="IMG/honesty_award.jpg">
-
-            </div>
+      <div class="edu-grid">
+        <div class="edu-card">
+          <div class="deg">Postgraduate Degree, Software Testing</div>
+          <div class="school">Cruzeiro do Sul Virtual</div>
+          <div class="yr">2023 – 2024</div>
         </div>
-    </div>
-
-    <div class="projects-container">
-        <h2>Projects</h2>
-
-        <div class="projects-box">
-            <div class="project">
-                <div class="project-title">
-                    <h3>E-Commerce - Meu Game Usado</h3>
-                    <small>Mentores Digital - 2021</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        This was my first e-commerce project that I did, it was made in Loja Integrada platform. At the
-                        time I was an Intern, and this project was in a final stage, so my job was to fix the CSS and
-                        JavaScript bugs.
-                    </p>
-
-                    <a target="_blank" href="https://www.meugameusado.com.br/">Link to the website</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>VeeOne</h3>
-                    <small>Mentores Digital - 2021</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        This project was made in WordPress. At the time I didn't know how to create WordPress projects,
-                        so I had a really good time learning this platform. My responsability was creating some pages
-                        with the team.
-                    </p>
-                    <a target="_blank" href="https://veeonehealth.com/">Link to the website</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>E-Commerce - Roupas da Bê</h3>
-                    <small>Mentores Digital - 2022</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        This is an e-commerce made in Loja Integrada, most of the work was done by me. The tecnologies
-                        and languages that I used were: JavaScript, SCSS, HTML, Gulp.
-                    </p>
-                    <a target="_blank" href="https://www.roupasdabe.com.br/">Link to the website</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Landing page - Câmera de Dado</h3>
-                    <small>Freelance</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        A landing page made for a freelance client.
-                    </p>
-
-                    <a target="_blank" href="https://cameradedado.com/">Link to the website</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Landing page - Acervo Financeiro</h3>
-                    <small>Freelance</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        A landing page made for a freelance client.
-                    </p>
-
-                    <a target="_blank" href="https://super-salamander-3b3c7b.netlify.app/">Link to the website</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Landing page - Humanu</h3>
-                    <small>Freelance</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        A landing page made for a freelance client.
-                    </p>
-
-                    <a target="_blank" href="https://humanu.com.br/">Link to the website</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Landing page - Effa Motors Zucatelli</h3>
-                    <small>Freelance</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        A landing page made for a freelance client.
-                    </p>
-
-                    <a target="_blank" href="https://effamotorszucatelli.com.br/">Link to the website</a>
-                </div>
-            </div>
-
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Bug Fixing</h3>
-                    <small>Freelance</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        I work also with freelance bug solving,
-                        with expertise in HTML/CSS, JavaScript, PHP, Python,
-                        Java, and related technologies. I'm committed to providing
-                        efficient and effective solutions to ensure seamless functionality
-                        and user experience for my client's projects.
-                    </p>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>This website</h3>
-                    <small>Personal Project</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        This is a project that I made everything from scratch, and even the UI Design, that I confess
-                        that I don't have much knowlodge, so it was a big challenge for me.
-                    </p>
-
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Drawbridge (Arduino)</h3>
-                    <small>College (PUCPR)</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        Drawbridge made in Arduino. Controlled by bluetooth in an Android App.
-                    </p>
-                    <a target="_blank" href="https://youtu.be/wgI7gScEWNU">Link to the Youtube Video</a><br>
-                    <small>Note: the video is in Brazilian Portuguese.</small>
-                </div>
-            </div>
-
-
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Productivity Project</h3>
-                    <small>College (PUCPR)</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        This is a Raspberry Pi project that connects organization systems with productivity methods.
-                    </p>
-                    <p>
-                        My job was to connect Google Calendar API and Todoist API with the MySQL database, using Python.
-                    </p>
-
-                    <a target="_blank" href="https://youtu.be/wgI7gScEWNU">Link to the Youtube Video</a><br>
-                    <small>Note: the video is in Brazilian Portuguese.</small>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Unity Game</h3>
-                    <small>Personal Study Project</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        I created this project to learn C# and Unity Game Engine. When I finished this project I
-                        published it in "itch.io".
-                    </p>
-
-                    <a target="_blank" href="https://rafael-branco.itch.io/survival-caps">Link to Itch.io</a>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Agitation Control</h3>
-                    <small>College (PUCPR)</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        Traffic and sound intensity control for cities, where the data is shown on an Android App. My
-                        job was to connect the MySQL to the App and the Hardware part (Raspberry Pi, sensors and
-                        circuits).
-                    </p>
-
-                    <a target="_blank" href="https://youtu.be/iqxAHLMER9Y">Link to the Youtube Video</a><br>
-                    <small>Note: the video is in Brazilian Portuguese.</small>
-                </div>
-            </div>
-
-            <div class="project">
-                <div class="project-title">
-                    <h3>Environment Control</h3>
-                    <small>College (PUCPR)</small>
-                </div>
-
-                <div class="project-content">
-                    <p>
-                        Control the entering and leaving of people of an environment.
-                    </p>
-                    <p>Developed with ESP32 and Python.</p>
-                    <a target="_blank" href="https://youtu.be/Bl2gyNoDxEE">Link to the Youtube Video</a><br>
-                    <small>Note: the video is in Brazilian Portuguese.</small>
-                </div>
-            </div>
-
+        <div class="edu-card">
+          <div class="deg">B.Eng, Computer Engineering</div>
+          <div class="school">Universidade Positivo</div>
+          <div class="yr">2016 – 2023</div>
         </div>
-
-
-
-
-    </div>
-
-    <div class="contact-container" id="contact-me">
-        <h2>
-            Contact Me
-        </h2>
-
-        <div class="contact-box">
-            <div class="contact">
-
-                <a target="_blank" href="mailto:rafael.rbranco@hotmail.com"><i class="fa-solid fa-envelope"></i></a>
-            </div>
-
-            <div class="contact">
-
-                <a target="_blank" href="https://github.com/rafael-branco"><i class="fa-brands fa-github"></i></a>
-            </div>
-            <div class="contact">
-
-                <a target="_blank" href="https://www.linkedin.com/in/rafael-branco/"><i
-                        class="fa-brands fa-linkedin"></i></a>
-            </div>
-
+        <div class="edu-card">
+          <div class="deg">Associate's, System Analysis &amp; Development</div>
+          <div class="school">UNICURITIBA</div>
+          <div class="yr">2021 – 2022</div>
         </div>
+      </div>
     </div>
+  </section>
 
-    <script src="JavaScript/script.js" type="text/javascript"></script>
+  <!-- ============================ DETAILS ============================ -->
+  <section class="section" id="details">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Details</span>
+        <h2>Languages &amp; recognition</h2>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-card">
+          <h3>Languages</h3>
+          <div class="line-list">
+            <span><strong>English</strong> — Fluent</span>
+            <span><strong>Portuguese</strong> — Native</span>
+            <span><strong>French</strong> — Basic</span>
+          </div>
+        </div>
+        <div class="detail-card">
+          <h3>Recognition</h3>
+          <div class="line-list">
+            <span><strong>Top Performer Award</strong> — Recognized among the top 4 of the year · Mentores Digital</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer>
+    <div class="wrap foot-inner">
+      <div>
+        <div class="name">Rafael do Rosário Branco</div>
+        <div class="sub">Senior QA Engineer · Curitiba, Brazil · <a href="mailto:rafael.rbranco@hotmail.com">rafael.rbranco@hotmail.com</a></div>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:rafael.rbranco@hotmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="stroke:var(--text-soft);fill:none"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/rafael-branco" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4V24h-4zM8 8h3.8v2.2h.05c.53-1 1.83-2.2 3.77-2.2C19.6 8 21 10.2 21 14v10h-4v-8.9c0-2.12-.76-3.57-2.65-3.57-1.45 0-2.3.98-2.68 1.92-.14.34-.17.8-.17 1.27V24H8z"/></svg>
+        </a>
+        <a href="https://github.com/rafael-branco" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.31-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.18.77.84 1.23 1.91 1.23 3.23 0 4.63-2.81 5.65-5.49 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
 
 </body>
-
 </html>
